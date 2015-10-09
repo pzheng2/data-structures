@@ -1,3 +1,6 @@
+require_relative 'p05_hash_map'
+require_relative 'p04_linked_list'
+
 class StaticArray
   def initialize(capacity)
     @store = Array.new(capacity)
@@ -24,14 +27,17 @@ class DynamicArray
   attr_reader :count
 
   def initialize(capacity = 8)
-    @store = StaticArray.new(capacity)
+    @map = HashMap.new
+    @store = LinkedList.new
     @count = 0
   end
 
   def [](i)
+    @map[i]
   end
 
   def []=(i, val)
+    @map[i] = val
   end
 
   def capacity
@@ -41,10 +47,31 @@ class DynamicArray
   def include?(val)
   end
 
+  def get(key)
+    if @map.include?(key)
+      return @map[key]
+    end
+    val = @prc.call(key)
+    @store.insert(key, val)
+    @map.set(key, @store.get(key))
+    eject! if count > @max
+
+    val
+  end
+
   def push(val)
+    @store[count] = val
+    @count += 1
   end
 
   def unshift(val)
+    return nil unless include?(val)
+    (count - 1).downto(0).each do |index|
+      @store[index + 1] = @store[index]
+    end
+    @store[0] = val
+    @count += 1
+
   end
 
   def pop
