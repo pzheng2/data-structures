@@ -6,7 +6,7 @@ class LRUCache
   def initialize(max, prc)
     @map = HashMap.new
     @store = LinkedList.new
-    @max = max
+    @max = max # max elements in cache
     @prc = prc
   end
 
@@ -15,6 +15,15 @@ class LRUCache
   end
 
   def get(key)
+    if @map.include?(key)
+      return @map[key]
+    end
+    val = @prc.call(key)
+    @store.insert(key, val)
+    @map.set(key, @store.get(key))
+    eject! if count > @max
+
+    val
   end
 
   def to_s
@@ -32,5 +41,7 @@ class LRUCache
   end
 
   def eject!
+    @store.remove(@store.last.key)
   end
+
 end
