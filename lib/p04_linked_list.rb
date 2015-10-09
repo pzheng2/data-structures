@@ -27,7 +27,7 @@ class LinkedList
   end
 
   def first
-    @head
+    @head.next
   end
 
   def last
@@ -65,7 +65,11 @@ class LinkedList
 
   def insert(key, val)
     new_link = Link.new(key, val)
-    last.next = new_link
+    if @head.key.nil?
+      @head = new_link
+    else
+      last.next = new_link
+    end
   end
 
   def remove(key)
@@ -92,11 +96,9 @@ class LinkedList
   def each
     cur = @head
 
-
-
     until cur.nil?
       yield(cur)
-      cur.next
+      cur = cur.next
     end
   end
 
